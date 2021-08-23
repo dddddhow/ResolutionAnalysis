@@ -48,14 +48,41 @@ int main()
     cout<<endl;
     cout<<"=================================================="<<endl;
     cout<<"Wavelet generation"<<endl;
-    string wavelet_form_flag = "Ricker";
+    string wavelet_form_flag = "Polyfit";
     //  form include :
-    //  1. Ricker
-    //  2. Yu
-    //  3. Li
+    //  1. Polyfit(polyfit with polynomial)
+    //  2. Ricker
+    //  3. Sinc
     //  4. Klauder
-    //  5. Sinc
 
+    //Klauder wavelet
+    if(wavelet_form_flag == "Polyfit")
+    {
+        cout<<" Wavelet form : Polyfit  wavelet"<<endl;
+        int ndge     = 4;           //degree of polynomial (default : 4)
+        float peak   = 1.0;         // peak value
+        float valley = -0.5;        // valley value
+        float lmain  = nw / 10;     // length of main lobe
+        float lside  = nw / 20;     // length of side lobe
+
+        cout<<"     "<<ndge<<"th degree polynomial fit"<<endl;
+        //polyfit
+        {
+            vec x = {{
+            nw/2.0-lmain/2.0-lside, nw/2.0-lmain/2.0-lside/2,nw/2.0-lmain/2.0,
+            nw/2.0,
+            nw/2.0+lmain/2.0,nw/2.0+lmain/2.0+lside/2,nw/2.0+lmain/2.0+lside}};
+            vec y = {{0.0, valley, 0.0, peak, 0.0, valley, 0.0}};
+
+            //fvec y = cos(x);
+            x.print("x is :");
+            y.print("y is :");
+            w = polyfit(x,y,ndge);
+        }
+
+    }
+
+    return 0;
     //Ricker wavelet
     if(wavelet_form_flag == "Ricker")
     {
@@ -63,16 +90,6 @@ int main()
         float fre = 80;             //frequency
         shen_ricker(nw,dt,fre,w);
     }
-
-    //Yu wavelet
-    if(wavelet_form_flag == "Yu")
-    {cout<<" Wavelet form : Yu wavelet"<<endl;}
-    //Li wavelet
-    if(wavelet_form_flag == "Li")
-    {cout<<" Wavelet form : Li wavelet"<<endl;}
-    //Klauder wavelet
-    if(wavelet_form_flag == "Klauder")
-    {cout<<" Wavelet form : Klauder wavelet"<<endl;}
 
     //Sinc wavelet
     if(wavelet_form_flag == "Sinc")
@@ -146,6 +163,10 @@ int main()
         cw               = 2.0 * cw % win;
         w                = real(ifft(cw));
     }
+
+    //Klauder wavelet
+    if(wavelet_form_flag == "Klauder")
+    {cout<<" Wavelet form : Klauder wavelet"<<endl;}
 
     //======================================================================//
     //wavelet in frequency domain
