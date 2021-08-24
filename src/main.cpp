@@ -62,8 +62,8 @@ int main()
         int ndge     = 4;           //degree of polynomial (default : 4)
         float peak   = 1.0;         // peak value
         float valley = -0.5;        // valley value
-        float lmain  = nw / 10;     // length of main lobe
-        float lside  = nw / 20;     // length of side lobe
+        float lmain  = nw / 100;     // length of main lobe
+        float lside  = nw / 200;     // length of side lobe
 
         cout<<"     "<<ndge<<"th degree polynomial fit"<<endl;
         //polyfit
@@ -74,10 +74,15 @@ int main()
             nw/2.0+lmain/2.0,nw/2.0+lmain/2.0+lside/2,nw/2.0+lmain/2.0+lside}};
             vec y = {{0.0, valley, 0.0, peak, 0.0, valley, 0.0}};
 
-            //fvec y = cos(x);
             x.print("x is :");
             y.print("y is :");
-            w = polyfit(x,y,ndge);
+            vec tmp = polyfit(x,y,ndge);
+            vec x1 = linspace<vec>(0,50,50);
+            vec y2 = polyval(tmp,x1);
+            tmp.print("fit is :");
+            y2.print("ys is ");
+
+            y2.save("y2.dat",raw_binary);
         }
 
     }
