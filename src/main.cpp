@@ -33,8 +33,7 @@ int main()
     int n2   = 6;              //samples of lateral
     //float d1 = 5.0;           //sampling interval of depth(m)
 
-    int nw   = 8000;             //samples of wavelet
-
+    int nw   = 8000;            //samples of wavelet
     float v  = 5000;            //velocity of layer (m/s)
     float dt = 0.5*1e-3;        //sampling interval of time(ms)
 
@@ -48,12 +47,11 @@ int main()
     cout<<endl;
     cout<<"=================================================="<<endl;
     cout<<"Wavelet generation"<<endl;
-    string wavelet_form_flag = "Polyfit";
+    string wavelet_form_flag = "Ricker";
     //  form include :
     //  1. Polyfit(polyfit with polynomial)
     //  2. Ricker
     //  3. Sinc
-    //  4. Klauder
 
     //Klauder wavelet
     if(wavelet_form_flag == "Polyfit")
@@ -87,12 +85,12 @@ int main()
 
     }
 
-    return 0;
+
     //Ricker wavelet
     if(wavelet_form_flag == "Ricker")
     {
         cout<<" Wavelet form : Ricker wavelet"<<endl;
-        float fre = 80;             //frequency
+        float fre = 60;             //frequency
         shen_ricker(nw,dt,fre,w);
     }
 

@@ -8,25 +8,19 @@ void shen_ricker(int nw, float dt, float fre, arma::fvec &w);
 
 int main()
 {
-    int n1 = 853;
-    int n2 = 2317;
+    int n1 = 2300;
+    int n2 = 3000;
 
-    float dt = 0.0005;
-    int nw   = n1-3;
-    float fre = 80;
+    float dt  = 0.0005;
+    int nw    = n1;
+    float fre = 28;
     fvec w(nw,fill::zeros);
     shen_ricker(nw, dt, fre, w);
-
     cout<<"df is "<<1.0/dt/n1<<" Hz"<<endl;
 
-
-
-
-
     w.save("w.dat",raw_binary);
-
     fmat vel;
-    vel.load("./WPIVelocityModel_nz853_nx2317_dx5_dz5.dat",arma::raw_binary);
+    vel.load("./vp_marmousi-ii_nx3000_nz2300_dxdz_1.25m.bin",raw_binary);
     vel.reshape(n1,n2);
 
     fmat ref(size(vel),fill::zeros);
@@ -38,27 +32,24 @@ int main()
                 / (vel(i1,i2) + vel(i1-1,i2));
         }
     }
-    ref.save("./ref_nz853_nx2317_dx5_dz5.dat",raw_binary);
+    ref.save("./ref.dat",raw_binary);
+
 
     fmat sei(size(vel),fill::zeros);
     for(int i2=0; i2<n2; i2++)
     {
         sei.col(i2) = conv(ref.col(i2),w,"same");
     }
-    sei.save("./sei_nz853_nx2317_dx5_dz5.dat",raw_binary);
-
-
+    sei.save("./sei.dat",raw_binary);
 
     fmat noise(size(sei),fill::randn);
     float sigPower = accu(sei  % sei);         // 求出信号功率
     //add noise
     noise = noise / 5.0;
-    sei=sei+noise;
-    sei.save("./sei_noise.dat",raw_binary);
-
+    //sei=sei+noise;
+    //sei.save("./sei_noise.dat",raw_binary);
     float noisePower=accu(noise % noise);       // 求出噪声功率
     float SNR=10*log10(sigPower/noisePower);    // 由信噪比定义求出信噪比，单位为db
-
     cout<<"SNR1 is : "<<SNR<<endl;
     cout<<"SNR2 is : "<<sigPower/noisePower<<endl;
 
@@ -80,12 +71,14 @@ int main()
         _tmp2.save("cref.dat",raw_binary);
         _tmp3.save("cw.dat",raw_binary);
     }
+    Mat<float> abscsei = abs(fft(sei));
+    abscsei.save("abscsei.dat",raw_binary);
 
     //
     fvec aimspe(n1,fill::zeros);
     {
         fvec _aimspe;
-        _aimspe.load("./cwavelet_nw_8000.dat",raw_binary);
+        _aimspe.load("./cwavelet_nw_8000_60hz.bin",raw_binary);
         _aimspe.reshape(8000,1);
         //interp
         {
@@ -94,36 +87,22 @@ int main()
             fvec xx = linspace<fvec>(0, 1.0/dt, n1);
             fvec yy;
             interp1(x, y, xx, yy);
-            aimspe = yy;
+            fvec tmp;
+            tmp.load("./cref.dat",raw_binary);
+            //tmp.reshape(n1,1);
+            aimspe = tmp % yy;
         }
     }
-    aimspe.save("aimspe.dat",raw_binary);
 
     fvec ratio(n1,fill::ones);
     {
-        fvec _tmp1;
-        _tmp1.load("./csei.dat");
-        _tmp1.reshape(n1,1);
-        _tmp1 = _tmp1 / n2;
-        for(int i1=0; i1<n1; i1++)
-        {
-            ratio(i1) = aimspe(i1) / _tmp1(i1);
-        }
-        //remove the value with large variance
-        {
-            float _mean = mean(ratio);
-            int   _end  = 100/(1.0/dt/n1);
-            //cout<<"mean is "<<_mean<<endl;
-            for(int i1=0 ;i1<n1; i1++)
+            fvec tmp;
+            tmp.load("./csei.dat",raw_binary);
+            for(int i1=0; i1<n1; i1++)
             {
-                //if(ratio(i1)>_mean*5)
-                //{ratio(i1)=_mean;}
+                ratio(i1) = aimspe(i1) *1.0 / tmp(i1);
             }
-            //ratio(span(_end,n1-_end)).fill(1.0);
-            //ratio.fill(1.0);
-        }
     }
-    ratio.save("ratio.dat",raw_binary);
 
     for(int i2=0; i2<n2; i2++)
     {
@@ -140,7 +119,7 @@ int main()
 
         Mat<cx_float> _tmp = ifft(csei);
         fmat _tmpsei = real(_tmp);
-        _tmpsei.save("new_sei_nz853_nx2317_dx5_dz5.dat",raw_binary);
+        _tmpsei.save("new_sei.dat",raw_binary);
     }
 
 

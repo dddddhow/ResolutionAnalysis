@@ -4,7 +4,7 @@ BinDir =.
 LibDir = ./lib
 IncDirList =./inc
 ObjDir =./obj
-BackDir=/home/ss/WINDOWS/CPLusPlus_Cases/ResolutionAnalysis/bck
+BackDir=/home/ss/WINDOWS/ResolutionAnalysis/bck/
 Date=$(shell date +%F_time%H)
 #--------------------------------------#
 Projn = a_out
