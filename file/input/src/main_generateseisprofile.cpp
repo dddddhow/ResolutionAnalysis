@@ -36,8 +36,6 @@ int main()
     //string fn_aimspe = "./cwavelet_nw_8000_60hz.bin";
     //string fn_out    = "./";
 
-
-
     int n1    = 250;
     int n2    = 131;
     float dt  = 0.002;
@@ -47,8 +45,6 @@ int main()
     string fn_sei    = "./stackdata/geo_stack_nt250_nx131_dt2ms.bin";
     string fn_aimspe = "./cwavelet_nw_8000_60hz.bin";
     string fn_out    = "./stackdata/";
-
-
 
 
     fvec w(nw,fill::zeros);
@@ -94,9 +90,11 @@ int main()
     {
         sei.col(i2) = conv(ref.col(i2),w,"same");
     }
-
+    if(fn_sei != "")
+    {
     sei.load(fn_sei,raw_binary);
     sei.reshape(n1,n2);
+    }
 
     //fmat noise(size(sei),fill::randn);
     //float sigPower = accu(sei  % sei);         // 求出信号功率
@@ -166,7 +164,7 @@ int main()
 
     //ifft
     {
-        Mat<cx_float> _tmp = ifft(ncsei);
+        Mat<cx_float> _tmp = ifft(ncsei*2);
         nsei = real(_tmp);
     }
 

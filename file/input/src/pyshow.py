@@ -64,7 +64,7 @@ plt.yticks(fontsize=fontsize_ticks)
 
 # sei profile compare show
 plt.figure()
-plt.subplot(2, 1, 1)
+# plt.subplot(2, 1, 1)
 it             = np.linspace(0, nz * dt, nz)
 fontsize_lable = 15
 fontsize_ticks = 10
@@ -83,8 +83,11 @@ plt.ylabel('Depth (m)', fontsize=fontsize_lable)
 # plt.title('Seismic profile', fontsize=fontsize_lable)
 plt.xticks(fontsize=fontsize_ticks)
 plt.yticks(fontsize=fontsize_ticks)
+
+
 # new
-plt.subplot(2, 1, 2)
+plt.figure()
+# plt.subplot(2, 1, 2)
 it             = np.linspace(0, nz * dt, nz)
 fontsize_lable = 15
 fontsize_ticks = 10
