@@ -6,10 +6,23 @@ import shen.peng.common as sp
 
 # ---------------------------------------------------------------------------
 # parameter definition and load file
-nw   = 8000
-nt   = 2400
+nw   = 80000
+nt   = 120000
 n2   = 6
-dt   = 0.5 * 1e-3
+# dt   = 0.5 * 1e-3
+dt   = 2.25861e-05  # 1000m/s 10m
+dt   = 1.12931e-05  # 2000m/s 10m
+dt   = 2.25861e-05  # 2000m/s 20m
+dt   = 5.64653e-06  # 4000m/s 10m
+dt   = 1.12931e-05  # 4000m/s 20m
+dt   = 1.69396e-05  # 4000m/s 30m
+dt   = 2.25861e-05  # 4000m/s 40m
+dt   = 3.76435e-06  # 6000m/s 10m
+dt   = 7.5287e-06   # 6000m/s 20m
+dt   = 1.12931e-05  # 6000m/s 30m
+
+dt   = 1.69396e-05  # 4000m/s 30m
+
 dmax = 60
 dmin = 5
 
@@ -151,7 +164,7 @@ plt.yticks(fontsize=ticks_fontsize)
 plt.subplot(2,1,2)
 plt.plot(iw, cw, color='black', linewidth=1.5)
 plt.grid()
-plt.xlim(0, 200)
+plt.xlim(0, 300)
 plt.xlabel('Frequency (Hz)', fontsize=label_fontsize)
 plt.ylabel('Amplitude', fontsize=label_fontsize)
 plt.xticks(fontsize=ticks_fontsize)

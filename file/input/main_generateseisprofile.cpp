@@ -31,7 +31,7 @@ int main()
 
     float dt  = 5e-6;
     int nw    = n1;
-    float fre = 50;
+    float fre = 80;
     fvec w(n1,fill::zeros);
     fvec neww(n1,fill::zeros);
 

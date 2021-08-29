@@ -92,8 +92,8 @@ it             = np.linspace(0, nz * dt, nz)
 fontsize_lable = 15
 fontsize_ticks = 10
 cmap           = 'binary'
-# vmin           = nsei.min() / 2
-# vmax           = nsei.max() / 2
+vmin           = nsei.min() / 5
+vmax           = nsei.max() / 5
 im = plt.imshow(
     nsei,
     extent=(0, nx * dx, nz * dz, 0),

@@ -27,25 +27,29 @@ int main()
     cout<<"=================================================="<<endl;
     cout<<"Parameters definition"<<endl;
 
-    //int n1    = 2300;
-    //int n2    = 3000;
-    //float dt  = 0.0005;
-    //float fre = 28;
-    //int nw    = n1;
-    //string fn_vel    = "./vp_marmousi-ii_nx3000_nz2300_dxdz_1.25m.bin";
-    //string fn_aimspe = "./cwavelet_nw_8000_60hz.bin";
-    //string fn_out    = "./";
-
-    int n1    = 250;
-    int n2    = 131;
-    float dt  = 0.002;
+    int n1    = 2300;
+    int n2    = 3000;
+    float dt  = 0.0005;
     float fre = 28;
     int nw    = n1;
-    string fn_vel    = "./stackdata/geo_stack_nt250_nx131_dt2ms.bin";
-    string fn_sei    = "./stackdata/geo_stack_nt250_nx131_dt2ms.bin";
-    string fn_aimspe = "./cwavelet_nw_8000_60hz.bin";
-    string fn_out    = "./stackdata/";
+    string fn_vel    = "./vp_marmousi-ii_nx3000_nz2300_dxdz_1.25m.bin";
+    //string fn_aimspe = "./cwavelet_nw_8000_60hz.bin";
+    string fn_aimspe = "../waveletGeneration/cew_smo_nx80000.dat";
+    string fn_out    = "./";
+    string fn_sei    = "";
 
+    //int n1    = 250;
+    //int n2    = 131;
+    //float dt  = 0.002;
+    //float fre = 28;
+    //int nw    = n1;
+    //string fn_vel    = "./stackdata/geo_stack_nt250_nx131_dt2ms.bin";
+    //string fn_sei    = "./stackdata/geo_stack_nt250_nx131_dt2ms.bin";
+    ////string fn_aimspe = "./cwavelet_nw_8000_60hz.bin";
+    //string fn_aimspe = "../waveletGeneration/cew_smo_nx80000.dat";
+    //string fn_out    = "./stackdata/";
+
+    float dtaim =1.69396e-05;  // 4000m/s 30m
 
     fvec w(nw,fill::zeros);
     fmat vel(n1,n2,fill::zeros);
@@ -92,8 +96,9 @@ int main()
     }
     if(fn_sei != "")
     {
-    sei.load(fn_sei,raw_binary);
-    sei.reshape(n1,n2);
+        cout<<" Load Seismic Profile from "<<fn_sei<<endl;
+        sei.load(fn_sei,raw_binary);
+        sei.reshape(n1,n2);
     }
 
     //fmat noise(size(sei),fill::randn);
@@ -126,7 +131,7 @@ int main()
         //_aimspe.reshape(8000,1);
         //interp
         {
-            fvec x = linspace<fvec>(0, 1.0/5e-4, _aimspe.n_rows);
+            fvec x = linspace<fvec>(0, 1.0/dtaim, _aimspe.n_rows);
             fvec y = _aimspe;
             fvec xx = linspace<fvec>(0, 1.0/dt, n1);
             fvec yy;

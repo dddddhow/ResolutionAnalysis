@@ -29,13 +29,27 @@ int main()
     cout<<endl;
     cout<<"=================================================="<<endl;
     cout<<"Parameters definition"<<endl;
-    int n1   = 2400;           //samples of vertical (1000 * 8)
+    int n1   = 120000;           //samples of vertical (300 * 8)
     int n2   = 6;              //samples of lateral
     //float d1 = 5.0;           //sampling interval of depth(m)
 
-    int nw   = 8000;            //samples of wavelet
-    float v  = 5000;            //velocity of layer (m/s)
-    float dt = 0.5*1e-3;        //sampling interval of time(ms)
+    //int nw   = 8000;            //samples of wavelet
+    //float dt = 0.5*1e-3;        //sampling interval of time(ms)
+    float v  = 4000;            //velocity of layer (m/s)
+    int nw   = 80000;            //samples of wavelet
+    float dt = 4.51722*1e-6;        //sampling interval of time(ms)
+    dt =2.25861e-05;  // 1000m/s 10m
+    dt =1.12931e-05;  // 2000m/s 10m
+    dt =2.25861e-05;  // 2000m/s 20m
+    dt =5.64653e-06;  // 4000m/s 10m
+    dt =1.12931e-05;  // 4000m/s 20m
+    dt =1.69396e-05;  // 4000m/s 30m
+    dt =2.25861e-05;  // 4000m/s 40m
+    dt =3.76435e-06;  // 6000m/s 10m
+    dt =7.5287e-06;   // 6000m/s 20m
+    dt =1.12931e-05;  // 6000m/s 30m
+
+    dt =1.69396e-05;  // 4000m/s 30m
 
     fmat ref (n1, n2, fill::zeros);     //rflection coefficient
     fmat sei (size(ref), fill::zeros);  //seismic profile(traces)
@@ -47,11 +61,12 @@ int main()
     cout<<endl;
     cout<<"=================================================="<<endl;
     cout<<"Wavelet generation"<<endl;
-    string wavelet_form_flag = "Ricker";
+    string wavelet_form_flag = "Personal";
     //  form include :
     //  1. Polyfit(polyfit with polynomial)
     //  2. Ricker
     //  3. Sinc
+    //  4. Personal
 
     //Klauder wavelet
     if(wavelet_form_flag == "Polyfit")
@@ -159,17 +174,19 @@ int main()
             win(span(_min,_max)).fill(1.0);
         }
 
-        //win.save("win.dat",arma::raw_binary);
-
         // band-limited wavelet (sinc wavelet)
         Col<cx_float> cw = fft(w);
         cw               = 2.0 * cw % win;
         w                = real(ifft(cw));
     }
 
-    //Klauder wavelet
-    if(wavelet_form_flag == "Klauder")
-    {cout<<" Wavelet form : Klauder wavelet"<<endl;}
+    //Personal wavelet
+    if(wavelet_form_flag == "Personal")
+    {
+        cout<<" Wavelet form : Personal wavelet"<<endl;
+        nw = 80000;
+        w.load("../file/input/waveletGeneration/ew_smo_nx80000.dat",raw_binary);
+    }
 
     //======================================================================//
     //wavelet in frequency domain
@@ -198,7 +215,7 @@ int main()
             // nz_tmp : interval of two reflection coefficient (depth domain)
             // nz_tmp : interval of two reflection coefficient (time domain)
             float nz_tmp = (i2 + 1) * (_max - _min) * 1.0 / (n2 - 1);
-            int nt_tmp   = int(nz_tmp * 1.0 / v * 1.0 / dt);
+            int nt_tmp   = int(nz_tmp * 1.0 / v * 2.0 / dt);
 
             cout<<"     Trace No."<<i2;
             cout<<" delta:"<<nz_tmp<<"m, nt :"<<nt_tmp<<endl;
