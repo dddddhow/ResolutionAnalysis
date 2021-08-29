@@ -1,24 +1,63 @@
+ /****************************************************************************
+ *     Author:Sheng Shen
+ *              WPI,Tongji university
+ *     Date:2021.08.08
+ *     Filename:
+ *     Description:
+ *
+ *     Last modified:
+ *****************************************************************************/
 #include "TJU_SHEN_2019.h"
 
 using namespace arma;
 using namespace std;
 
+/*****************************************************************************/
 void shen_ricker(int nw, float dt, float fre, arma::fvec &w);
+
+/*****************************************************************************/
 
 int main()
 {
-    int n1 = 1001;
-    int n2 = 4;
+    //======================================================================//
+    //parameters definition
+    //======================================================================//
+    cout<<endl;
+    cout<<"=================================================="<<endl;
+    cout<<"Parameters definition"<<endl;
+
+    int n1    = 8000;
+    float v   = 1000;
+
+    float dt  = 5e-6;
+    int nw    = n1;
+    float fre = 50;
+    fvec w(n1,fill::zeros);
+    fvec neww(n1,fill::zeros);
+
+
+    float rpeak   = 1.0;        // peak value           default 1.0
+    float rvalley = -0.25;      // valley value         [-1,1]
+    float rmain  = 1.0;         // length of main lobe  default 1.0
+    float rside  = 1.0;         // length of side lobe  [0,10]
+
+
+    float T = 10.0 / v * 2.0;
+    cout<<"dt is "<<T*1.0/nw<<" s"<<endl;
+    cout<<"df is "<<1.0/(T*1.0/nw)/nw<<" Hz"<<endl;
+
+    cout<<"  # [rpeak,rvalley] is :["<<rpeak<<","<<rvalley<<"]"<<endl;
+    cout<<"  # [rmain,rside  ] is :["<<rmain<<","<<rside<<"]"<<endl;
+
+    //======================================================================//
+    //generate wavelet
+    //======================================================================//
+    cout<<endl;
+    cout<<"=================================================="<<endl;
+    cout<<"generate wavelet"<<endl;
 
     //wavelet mould (ricker)
-    fvec w;
-    {
-        float dt  = 0.00005;
-        int nw    = n1;
-        float fre = 30;
-        w.zeros(nw,1);
-        shen_ricker(nw, dt, fre, w);
-    }
+    shen_ricker(nw, dt, fre, w);
     //adjust the wavelet
     //  1: w(0) = w(n1-1) = 0
     //  2: max = 1.0
@@ -27,19 +66,20 @@ int main()
         w = w - w(0);
         float _min = w.min();
         float _max = w.max();
-        //cout<<"["<<_min<<","<<_max<<"]"<<endl;
-        float _rneg = -0.5 / _min;
-        float _rpos = 1.0 / _max;
-        for(int i1=0; i1<n1; i1++)
-        {
-            if(w(i1)<0){w(i1)=w(i1)*_rneg;}
-            if(w(i1)>0){w(i1)=w(i1)*_rpos;}
-        }
-        //_min = w.min();
-        //_max = w.max();
-        //cout<<"["<<_min<<","<<_max<<"]"<<endl;
+        cout<<" ori range is :"<<endl;
+        cout<<w(0)<<" "<<w(nw-1)<<endl;
+        cout<<"["<<_min<<","<<_max<<"]"<<endl;
+        float _rneg = rvalley / _min;
+        float _rpos = rpeak / _max;
+
+        //w = ( w - _min ) / (_max - _min) * (rpeak - rvalley) + rvalley;
+
+        _min = w.min();
+        _max = w.max();
+        cout<<" new range is :"<<endl;
+        cout<<w(0)<<" "<<w(nw-1)<<endl;
+        cout<<"["<<_min<<","<<_max<<"]"<<endl;
     }
-    w.save("w.dat",raw_binary);
 
     // get loction
     Col<int> loc(7,fill::zeros);
@@ -79,29 +119,21 @@ int main()
 
 
     //generate personal wavelet
-    fmat wav(n1,n2,fill::zeros);
     {
-        float rpeak   = 1.0;        // peak value           default 1.0
-        float rvalley = -0.1;       // valley value         [-1,1]
-        float rmain  = 1.0;         // length of main lobe  default 1.0
-        float rside  = 0.5;         // length of side lobe  [0,10]
-
-        for (int i2=0; i2<n2 ;i2++)
+        //for (int i2=0; i2<n2 ;i2++)
         {
             float peak   = 1.0;
             float valley = peak * rvalley;
-            rside        = (2.0-0.2)/n2 * (i2+1);
-
-            cout<<"No."<<i2<<endl;
-            cout<<"  # [rpeak,rvalley] is :["<<rpeak<<","<<rvalley<<"]"<<endl;
-            cout<<"  # [rmain,rside  ] is :["<<rmain<<","<<rside<<"]"<<endl;
-
             int _lmain     = loc(4) - loc(2);
             int _lside     = int(_lmain * rside);
             int _lsideside = _lside - (loc(2)-loc(1));
 
             if(_lsideside <= 0)
-            {cout<<"ERROR:Side lobe too small"<<endl;return 0;}
+            {cout<<"ERROR:Side lobe too small"<<endl;
+                cout<<"lmain"<<_lmain<<endl;
+                cout<<"lside"<<_lside<<endl;
+                cout<<"lsideside"<<_lsideside<<endl;
+                return 0;}
 
             // step 1 : width direction adjustment
             int _nw = _lmain + _lside * 2;
@@ -130,45 +162,34 @@ int main()
                     =yy;
             }
 
-            // step 2 : height direction adjustment
-            if(0)
-            {
-                float _min  = wtmp.min();
-                float _max  = wtmp.max();
-                float _rneg = valley / _min;
-                float _rpos = peak / _max;
-                for(int i1=0; i1<wtmp.n_rows; i1++)
-                {
-                    if(wtmp(i1)<0){wtmp(i1) = wtmp(i1)*_rneg;}
-                    if(wtmp(i1)>0){wtmp(i1) = wtmp(i1)*_rpos;}
-                }
-            }
-
-            // step 3 : interpolation
+            // step 2 : interpolation
             {
                 fvec x   = linspace<fvec>(0, wtmp.n_rows, wtmp.n_rows);
                 fvec y   = wtmp;
                 fvec xx  = linspace<fvec>(0, wtmp.n_rows, n1);
                 fvec yy;
                 interp1(x, y, xx, yy);
-                wav.col(i2) = yy;
+                neww = yy;
             }
         }
     }
-    cout<<size(wav)<<endl;
-    wav.save("wav.dat",raw_binary);
-
+    //cout<<size(neww)<<endl;
 
 
     //
-    fmat ref(n1,n2,fill::zeros);
-    fmat sei(n1,n2,fill::zeros);
-    for(int i2=0; i2<n2; i2++)
-    {
-        ref(int(n1/2),i2) = 1.0;
-        sei.col(i2) = conv(ref.col(i2),wav.col(i2),"same");
-    }
-    sei.save("sei.dat",raw_binary);
+    Mat<float> cneww = abs(fft(neww));
+
+    //======================================================================//
+    //save file
+    //======================================================================//
+    cout<<endl;
+    cout<<"=================================================="<<endl;
+    cout<<"Save file"<<endl;
+
+    w.save("w.dat",raw_binary);
+    neww.save("neww.dat",raw_binary);
+    cneww.save("cneww.dat",raw_binary);
+
 
 
 
@@ -234,37 +255,37 @@ void shen_ricker(int nw, float dt, float fre, arma::fvec &w)
 
 
 /*
-        //type 2 :
-        //for(int i2=0 ; i2<n2 ;i2++)
-        {
-            int _lmain = loc(4) - loc(2);
-            int _lside = int(_lmain * rside);
-            int _nw = _lmain + _lside * 2;
-            fvec wtmp(_nw,fill::zeros);
-            {
-                fvec x = linspace<fvec>(loc(0), loc(2), loc(2)-loc(0));
-                fvec y = w(span(loc(0),loc(2)-1));
-                fvec xx = linspace<fvec>(loc(0), loc(2), _lside);
-                fvec yy;
-                interp1(x, y, xx, yy);
-                wtmp(span(loc(0),loc(0)+_lside-1)) = yy;
-            }
-            {
-                wtmp(span(loc(0)+_lside,loc(0)+_lside-1+_lmain))
-                    = w(span(loc(2),loc(4)-1));
-            }
-            {
-                fvec x = linspace<fvec>(loc(4), loc(6), loc(6)-loc(4));
-                fvec y = w(span(loc(4),loc(6)-1));
-                fvec xx = linspace<fvec>(loc(4), loc(6), _lside);
-                fvec yy;
-                interp1(x, y, xx, yy);
-                wtmp(span(loc(0)+_lside+_lmain,loc(0)+_lmain+_lside+_lside-1))
-                    =yy;
-            }
-            cout<<wtmp.n_rows<<endl;
-            wtmp.save("wtmp2.dat",raw_binary);
-        }
+//type 2 :
+//for(int i2=0 ; i2<n2 ;i2++)
+{
+int _lmain = loc(4) - loc(2);
+int _lside = int(_lmain * rside);
+int _nw = _lmain + _lside * 2;
+fvec wtmp(_nw,fill::zeros);
+{
+fvec x = linspace<fvec>(loc(0), loc(2), loc(2)-loc(0));
+fvec y = w(span(loc(0),loc(2)-1));
+fvec xx = linspace<fvec>(loc(0), loc(2), _lside);
+fvec yy;
+interp1(x, y, xx, yy);
+wtmp(span(loc(0),loc(0)+_lside-1)) = yy;
+}
+{
+wtmp(span(loc(0)+_lside,loc(0)+_lside-1+_lmain))
+= w(span(loc(2),loc(4)-1));
+}
+{
+fvec x = linspace<fvec>(loc(4), loc(6), loc(6)-loc(4));
+fvec y = w(span(loc(4),loc(6)-1));
+fvec xx = linspace<fvec>(loc(4), loc(6), _lside);
+fvec yy;
+interp1(x, y, xx, yy);
+wtmp(span(loc(0)+_lside+_lmain,loc(0)+_lmain+_lside+_lside-1))
+=yy;
+}
+cout<<wtmp.n_rows<<endl;
+wtmp.save("wtmp2.dat",raw_binary);
+}
 
 
 
