@@ -38,7 +38,7 @@ plt.ylabel('Amplitude', fontsize=fontsize_lable)
 plt.xticks(fontsize=fontsize_ticks)
 plt.yticks(fontsize=fontsize_ticks)
 plt.legend(fontsize=fontsize_lable)
-plt.xlim(0, 200)
+plt.xlim(0, 500)
 
 # ref profile show
 it             = np.linspace(0, nz * dt, nz)

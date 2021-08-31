@@ -38,7 +38,7 @@ plt.ylabel('Amplitude', fontsize=fontsize_lable)
 plt.xticks(fontsize=fontsize_ticks)
 plt.yticks(fontsize=fontsize_ticks)
 plt.legend(fontsize=fontsize_lable)
-plt.xlim(0, 200)
+plt.xlim(0, 600)
 
 # ref profile show
 it             = np.linspace(0, nz * dt, nz)
@@ -69,8 +69,8 @@ it             = np.linspace(0, nz * dt, nz)
 fontsize_lable = 15
 fontsize_ticks = 10
 cmap           = 'binary'
-vmin           = sei.min() / 2
-vmax           = sei.max() / 2
+vmin           = sei.min() / 5
+vmax           = sei.max() / 5
 im = plt.imshow(
     sei,
     extent=(0, nx * dx, nz * dz, 0),
@@ -80,7 +80,7 @@ im = plt.imshow(
 plt.axis('tight')
 plt.xlabel('Lateral (m)', fontsize=fontsize_lable)
 plt.ylabel('Depth (m)', fontsize=fontsize_lable)
-# plt.title('Seismic profile', fontsize=fontsize_lable)
+plt.title('Seismic profile', fontsize=fontsize_lable)
 plt.xticks(fontsize=fontsize_ticks)
 plt.yticks(fontsize=fontsize_ticks)
 
@@ -103,6 +103,7 @@ im = plt.imshow(
 plt.axis('tight')
 plt.xlabel('Lateral (m)', fontsize=fontsize_lable)
 plt.ylabel('Depth (m)', fontsize=fontsize_lable)
+plt.title('New seismic profile', fontsize=fontsize_lable)
 plt.xticks(fontsize=fontsize_ticks)
 plt.yticks(fontsize=fontsize_ticks)
 
@@ -114,7 +115,7 @@ fontsize_lable = 15
 fontsize_ticks = 10
 loc1           = int(nx / 2)
 plt.figure()
-plt.plot(iz, ref[:, loc1], linewidth=2.0, color='purple', label='FreSpe: Ref')
+plt.plot(iz, ref[:, loc1], linewidth=0.5, color='purple', label='FreSpe: Ref')
 plt.plot(iz, sei[:, loc1], linewidth=2.0, color='blue', label='FreSpe: Sei')
 plt.plot(iz, nsei[:, loc1], linewidth=2.0, color='red', label='FreSpe: NewSei')
 plt.grid()

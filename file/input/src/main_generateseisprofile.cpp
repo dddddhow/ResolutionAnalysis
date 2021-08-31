@@ -34,6 +34,7 @@ int main()
     int nw    = n1;
     string fn_vel    = "./vp_marmousi-ii_nx3000_nz2300_dxdz_1.25m.bin";
     //string fn_aimspe = "./cwavelet_nw_8000_60hz.bin";
+    //string fn_aimspe = "./cwavelet_nw_80000_100hz.bin";
     string fn_aimspe = "../waveletGeneration/cew_smo_nx80000.dat";
     string fn_out    = "./";
     string fn_sei    = "";
@@ -49,7 +50,16 @@ int main()
     //string fn_aimspe = "../waveletGeneration/cew_smo_nx80000.dat";
     //string fn_out    = "./stackdata/";
 
-    float dtaim =1.69396e-05;  // 4000m/s 30m
+
+    //wavelet1
+    //float dtaim =1.69396e-05;  // 4000m/s 30m
+    //float dtaim =3.76435e-06;  // 6000m/s 10m
+
+    //wavelet2
+    float dtaim =4.94193e-06; //6000m/s 10m
+
+    //ricker wavelet
+    //float dtaim =dt;  // 60hz ricker
 
     fvec w(nw,fill::zeros);
     fmat vel(n1,n2,fill::zeros);
@@ -128,7 +138,6 @@ int main()
     {
         fvec _aimspe;
         _aimspe.load(fn_aimspe,raw_binary);
-        //_aimspe.reshape(8000,1);
         //interp
         {
             fvec x = linspace<fvec>(0, 1.0/dtaim, _aimspe.n_rows);
@@ -169,7 +178,7 @@ int main()
 
     //ifft
     {
-        Mat<cx_float> _tmp = ifft(ncsei*2);
+        Mat<cx_float> _tmp = ifft(ncsei);
         nsei = real(_tmp);
     }
 
