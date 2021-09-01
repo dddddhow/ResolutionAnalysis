@@ -1,6 +1,6 @@
 divider="---------------------------------------------------------------------"
 InstallDir=/
-BinDir =.
+BinDir =./bin
 LibDir = ./lib
 IncDirList =./inc
 ObjDir =./obj
@@ -34,7 +34,7 @@ CPP_CMPL_FLAG = $(flag_debug) -std=c++11 -fopenmp -fmax-errors=2 -O3 \
 
 F_CMPL_FLAG   = -cpp -O3
 # list of libs in use (with no -l)
-LIB_LIST	  = powershen m mkl_rt
+LIB_LIST	  = powershen mkl_rt opencv_core opencv_imgproc opencv_highgui opencv_imgcodecs
 # list of libs in use (with -l)
 LIB_FLAG      = $(addprefix -L,${LibDir}) $(addprefix -l,${LIB_LIST})
 # list of inc
