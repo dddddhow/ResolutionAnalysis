@@ -35,7 +35,7 @@ int main()
 
     //int nw   = 8000;            //samples of wavelet
     //float dt = 0.5*1e-3;        //sampling interval of time(ms)
-    float v  = 4000;            //velocity of layer (m/s)
+    float v  = 6000;            //velocity of layer (m/s)
     int nw   = 80000;            //samples of wavelet
     float dt = 4.51722*1e-6;        //sampling interval of time(ms)
     dt =2.25861e-05;  // 1000m/s 10m
@@ -49,7 +49,6 @@ int main()
     dt =7.5287e-06;   // 6000m/s 20m
     dt =1.12931e-05;  // 6000m/s 30m
 
-    dt =1.69396e-05;  // 4000m/s 30m
 
     fmat ref (n1, n2, fill::zeros);     //rflection coefficient
     fmat sei (size(ref), fill::zeros);  //seismic profile(traces)

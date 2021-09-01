@@ -60,8 +60,8 @@ int main()
     arma::fmat model;
     arma::fvec w;
 
-    float tickness = 30;
-    float vel      = 4000;
+    float tickness = 10;
+    float vel      = 1000;
     float wt       = tickness * 1.0 / vel * 2.0 * 2.0;
     int nw         = 80000;
     float dt,df;
