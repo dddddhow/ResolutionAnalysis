@@ -55,13 +55,17 @@ int main()
     cout<<"Parameters Defination"<<endl;
 
     int nz,nx;
-    std::string img_path = "./wavelet.png";
+    std::string img_path = "./wavelet2_1.jpg";
     cv::Mat img;
     arma::fmat model;
     arma::fvec w;
 
     float tickness = 10;
+<<<<<<< HEAD
     float vel      = 1000;
+=======
+    float vel      = 6000;
+>>>>>>> 05bfca7dcc09e68b9af89f504189f73134a24283
     float wt       = tickness * 1.0 / vel * 2.0 * 2.0;
     int nw         = 80000;
     float dt,df;
@@ -111,7 +115,7 @@ int main()
         int flag = 0;
         for(int iz = 1; iz < nz; iz++)
         {
-            if(flag==0 && model(iz,ix)-model(iz-1,ix) > 30)
+            if(flag==0 && model(iz,ix)-model(iz-1,ix) > 10)
             {
                 flag = 1;
                 w(ix) = nz-iz;
@@ -130,7 +134,7 @@ int main()
     float mintmp = w.min();
     cout<<" # [min,max] of wavelet is : ["<<mintmp<<","<<maxtmp<<"]"<<endl;
 
-    shen_gauss_smooth_1d(_tmp, 11, w);
+    shen_gauss_smooth_1d(_tmp, 17, w);
 
     maxtmp = w.max();
     mintmp = w.min();

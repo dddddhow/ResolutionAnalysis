@@ -34,6 +34,7 @@ int main()
     //float d1 = 5.0;           //sampling interval of depth(m)
 
     //int nw   = 8000;            //samples of wavelet
+<<<<<<< HEAD
     //float dt = 0.5*1e-3;        //sampling interval of time(ms)
     float v  = 6000;            //velocity of layer (m/s)
     int nw   = 80000;            //samples of wavelet
@@ -49,6 +50,27 @@ int main()
     dt =7.5287e-06;   // 6000m/s 20m
     dt =1.12931e-05;  // 6000m/s 30m
 
+=======
+    float v  = 6000;            //velocity of layer (m/s)
+    int nw   = 80000;            //samples of wavelet
+
+    //float dt = 0.5*1e-3;        //sampling interval of time(ms)
+
+    //wavelet 1
+    //float dt =2.25861e-05;  // 1000m/s 10m
+    //float dt =1.12931e-05;  // 2000m/s 10m
+    //float dt =2.25861e-05;  // 2000m/s 20m
+    //float dt =5.64653e-06;  // 4000m/s 10m
+    //float dt =1.12931e-05;  // 4000m/s 20m
+    //float dt =1.69396e-05;  // 4000m/s 30m
+    //float dt =2.25861e-05;  // 4000m/s 40m
+    //float dt =3.76435e-06;  // 6000m/s 10m
+    //float dt =7.5287e-06;   // 6000m/s 20m
+    //float dt =1.12931e-05;  // 6000m/s 30m
+
+    //wavelet 2
+    float dt = 4.94193e-06;   // 6000m/s 10m
+>>>>>>> 05bfca7dcc09e68b9af89f504189f73134a24283
 
     fmat ref (n1, n2, fill::zeros);     //rflection coefficient
     fmat sei (size(ref), fill::zeros);  //seismic profile(traces)
@@ -104,7 +126,7 @@ int main()
     if(wavelet_form_flag == "Ricker")
     {
         cout<<" Wavelet form : Ricker wavelet"<<endl;
-        float fre = 60;             //frequency
+        float fre = 100;             //frequency
         shen_ricker(nw,dt,fre,w);
     }
 

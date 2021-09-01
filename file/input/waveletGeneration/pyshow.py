@@ -22,11 +22,14 @@ import matplotlib.pyplot as plt
 # --------------------------------------------------------------------------- #
 # 参数定义 & 数据加载
 # --------------------------------------------------------------------------- #
-n1 = 1771
+# n1 = 1771
+n1 = 1349
 d1 = 0.02
 
-w = np.fromfile('./w_ori_nx1771.dat',dtype='float32')
-sw = np.fromfile('./w_smo_nx1771.dat',dtype='float32')
+fn_w = './w_ori_nx'+str(n1)+'.dat'
+fn_sw = './w_smo_nx'+str(n1)+'.dat'
+w = np.fromfile(fn_w,dtype='float32')
+sw = np.fromfile(fn_sw,dtype='float32')
 
 ix = np.linspace(0, n1*d1 ,n1)
 label_fontsize = 15

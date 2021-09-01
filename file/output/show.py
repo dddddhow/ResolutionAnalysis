@@ -9,7 +9,11 @@ import shen.peng.common as sp
 nw   = 80000
 nt   = 120000
 n2   = 6
+
+# ricker
 # dt   = 0.5 * 1e-3
+
+# wavelet1
 dt   = 2.25861e-05  # 1000m/s 10m
 dt   = 1.12931e-05  # 2000m/s 10m
 dt   = 2.25861e-05  # 2000m/s 20m
@@ -21,6 +25,11 @@ dt   = 3.76435e-06  # 6000m/s 10m
 dt   = 7.5287e-06   # 6000m/s 20m
 dt   = 1.12931e-05  # 6000m/s 30m
 
+<<<<<<< HEAD
+=======
+# wavelet 2
+dt   = 4.94193e-06  # 6000m/s 10m
+>>>>>>> 05bfca7dcc09e68b9af89f504189f73134a24283
 
 dmax = 60
 dmin = 5
@@ -163,7 +172,7 @@ plt.yticks(fontsize=ticks_fontsize)
 plt.subplot(2,1,2)
 plt.plot(iw, cw, color='black', linewidth=1.5)
 plt.grid()
-plt.xlim(0, 300)
+plt.xlim(0, 600)
 plt.xlabel('Frequency (Hz)', fontsize=label_fontsize)
 plt.ylabel('Amplitude', fontsize=label_fontsize)
 plt.xticks(fontsize=ticks_fontsize)
